@@ -1,0 +1,17 @@
+{
+  "name": "nodejs-ioc-trials",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Odelon Jhey Pacalso <odjhey@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.16.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  }
+}
