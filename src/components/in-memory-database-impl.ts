@@ -1,11 +1,11 @@
 import { OperationResult } from '../utils/utils'
-import { Database } from './database.interface'
+import { CreateUserParams, Database } from './interfaces/database.interface'
 
 export class InMemoryDatabaseImpl implements Database {
   private users: { id: string; name: string }[]
 
-  constructor({ users }: InMemoryDatabaseConstructorParams) {
-    this.users = users
+  constructor() {
+    this.users = []
   }
 
   async getUser(
@@ -17,8 +17,17 @@ export class InMemoryDatabaseImpl implements Database {
     }
     return { ok: true, data: user }
   }
+
+  async createUser(
+    attribs: CreateUserParams
+  ): Promise<OperationResult<{ id: string; name: string }, 'failed'>> {
+    const user = this.users.find((user) => user.id === attribs.id)
+    if (user) {
+      return { ok: false, errorKind: 'failed' }
+    }
+    this.users.push(attribs)
+    return { ok: true, data: attribs }
+  }
 }
 
-export type InMemoryDatabaseConstructorParams = {
-  users: { id: string; name: string }[]
-}
+export type InMemoryDatabaseConstructorParams = {}

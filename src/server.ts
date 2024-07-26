@@ -1,4 +1,4 @@
-import { Database } from './components/database.interface'
+import { Database } from './components/interfaces/database.interface'
 import { CONFIG } from './config'
 import { shared } from './shared'
 console.log(`hello ${CONFIG.projectName}`)
@@ -7,9 +7,16 @@ const getUser = async (deps = defaultDeps()) => {
   const user = await deps.db.getUser('1')
   return user
 }
+const createUser = async (deps = defaultDeps()) => {
+  const user = await deps.db.createUser({
+    id: '1',
+    name: 'Batman',
+  })
+  return user
+}
 
 type Deps = {
-  db: Pick<Database, 'getUser'>
+  db: Pick<Database, 'getUser' | 'createUser'>
 }
 
 const defaultDeps = (): Deps => ({
@@ -17,7 +24,9 @@ const defaultDeps = (): Deps => ({
 })
 
 const main = async () => {
+  await createUser()
   const user = await getUser()
+
   console.log('---- main ----')
   console.log(user)
 }
@@ -28,6 +37,9 @@ const test = async () => {
     db: {
       getUser: async () => {
         return { ok: true, data: { id: '0000', name: 'Joker' } }
+      },
+      createUser: async () => {
+        return { ok: false, errorKind: 'failed' } as const
       },
     },
   })
